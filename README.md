@@ -13,6 +13,6 @@ The default configuration file for this is at ~/.ssh/config.
 
 An example file has been added to the repo, you better make your own one, but consider that the syntax for the ControlPath has to end with
 > %r@%h:%p
-if you don't want to change the script.
 
 ![syntax](https://user-images.githubusercontent.com/29956389/62935022-4f1d3800-bdc6-11e9-904b-cd03d92a3dd4.png)
+
