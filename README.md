@@ -22,3 +22,6 @@ Be sure ton configure the script itself:
 Be sure to check the permissions and the owner of the script aswell as the config file, as it could disclose important network information.
 
 Now you just have to add your script to the PATH, and you ready to go!
+
+## Troubleshoot
+If you find yourself not beeing able to connect to a server, and the script just loops over the selection screen, you can delete the `while [ 1 ] ; do` and the `done` at the bottom end of the file to further investigate why you can't connect.
