@@ -8,7 +8,7 @@ When started, it displays all known hosts listed in the ssh config file. Checks 
 
 ## Configuration
 ![dgr](https://user-images.githubusercontent.com/29956389/62971405-1014d400-be12-11e9-81fd-f243fe5cf34a.png)
-Be sure to check the permissions and the owner of the script as well as the config file, as it could disclose important network information.
+Be sure to configure the permissions and the owner of the script as well as the config file properly, as it could disclose important network information.
 
 If you don't know ssh's ControlMaster, I recommend you to read the fancy manual.
 In short, it allows you to save the ssh's connection socket inside a directory, where it will stay for a specified amount of time, before being deleted.
