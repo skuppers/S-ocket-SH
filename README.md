@@ -1,1 +1,1 @@
-# S-ocket-SH
+# S(ocket)-SH
