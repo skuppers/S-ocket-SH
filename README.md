@@ -7,7 +7,7 @@ An SSH connection manager powered by ssh's controlmaster config file.
 When started, it displays all known hosts listed in the ssh config file. Checks if the destination is reachable, specifies the associated IP address, as well as the Socket Status.
 
 ## Configuration
-![dgr](https://user-images.githubusercontent.com/29956389/62971383-f83d5000-be11-11e9-8a3e-568615fafde9.png)
+![dgr](https://user-images.githubusercontent.com/29956389/62971405-1014d400-be12-11e9-81fd-f243fe5cf34a.png)
 Be sure to check the permissions and the owner of the script as well as the config file, as it could disclose important network information.
 
 If you don't know ssh's ControlMaster, I recommend you to read the fancy manual.
