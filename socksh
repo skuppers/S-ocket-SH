@@ -1,0 +1,120 @@
+#!/bin/bash
+
+SPACES=18 				# UI Padding, increase if you have long host aliases.
+PING_TIMEOUT=0.01			# Time before the ping is aborted and server marked as offline. In seconds.
+SOCKET_DIRECTORY="./socket_directory"	# The ControlMaster's socket directory.
+CONFIG_FILE="./config"			# The ControlMaster's config file.
+
+function err_check () {
+	if [ ! -d $SOCKET_DIRECTORY ]; then
+		echo "No valid socket directory specified."
+		exit 42
+	fi
+}
+
+function purge_sockets ()
+{
+	echo "Are you sure you want to delete all files in '$SOCKET_DIRECTORY' ? (y/n)"
+	read input
+	if [[ $input == "y" ]]; then
+
+		for ACTV_SOCK in `ls $SOCKET_DIRECTORY/`; do
+			echo "Deleting socket: $ACTV_SOCK"
+			rm -rf $SOCKET_DIRECTORY/$ACTV_SOCK
+		done
+	else
+		connect
+	fi
+	exit 0
+}
+
+function align_text () {
+	local spaces=${#1}
+	if [ $i -ge 10 ]; then
+		spaces=$(($spaces+1))
+	fi
+
+	if [ $2 -eq 1 ]; then
+		spaces=$(($SPACES-$spaces))
+	else
+		spaces=$((15-$spaces))
+	fi
+	while [ $spaces -gt 0 ]; do
+		echo -ne " "
+		spaces=$(($spaces-1))
+	done
+}
+
+function list_connections ()
+{
+	i=0
+	echo "Possible ssh connections :"
+	echo -e "[X] ---\t\e[31m PURGE SOCKETS\e[0m\t---"
+	while IFS= read -r HOST;
+	do
+		#retrieve host
+		if [[ $HOST == host* ]]; then
+			echo ""
+			i=$((i+1))
+			echo -n "[$i] `echo "$HOST" | cut -d' ' -f2`"
+			align_text $(echo "$HOST" | cut -d' ' -f2) 1
+		fi
+
+		#retrieve hostname
+		if [[ $HOST == *Hostname* ]]; then
+			HOST=`echo $HOST | cut -d' ' -f2`
+			timeout $PING_TIMEOUT ping -c 1 $HOST 2>&1 1>&-
+			if [ $? -eq 0 ]; then
+				echo -en "\e[32m \xE2\x9C\x94 \e[0m"
+			else
+				echo -en "\e[31m \xE2\x9C\x97 \e[0m"
+			fi
+			echo -n -e "[`echo $HOST`]"
+			#Check if an active socket exist for this host
+			for SOCKET in `ls $SOCKET_DIRECTORY`; do
+				socket_host=`echo "$SOCKET" | cut -d'@' -f2 | cut -d':' -f1`
+				if [[ $socket_host == $HOST ]]; then
+					align_text $HOST 2
+					echo -n -e "[\e[32mSock UP\e[0m]"
+					break
+				fi
+			done
+		fi
+	done < $CONFIG_FILE
+	echo ""
+}
+
+function connect () {
+	echo -ne "\nSelect a server to connect to: "
+	read input
+	case $input in
+		"exit") exit 0;;
+		"quit") exit 0;;
+		"bye") exit 0;;
+		"X") purge_sockets;;
+	esac
+	y=0
+	TARGET="unknown"
+	if [[ $input =~ ^[1-9]+$ ]]; then
+		while IFS= read -r HOSTNAME;
+		do
+			if [[ $HOSTNAME == host* ]]; then
+				y=$((y+1))
+				if (($input == y)); then
+					TARGET=`echo "$HOSTNAME" | cut -d' ' -f2`
+					break
+				fi
+			fi
+		done < $CONFIG_FILE
+	fi
+	clear
+	echo "SockSH: Connecting to $TARGET: "
+	ssh $TARGET
+}
+
+while [ 1 ]; do
+	err_check
+	clear
+	list_connections
+	connect
+done

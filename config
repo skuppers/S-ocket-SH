@@ -1,0 +1,15 @@
+host GATEWAY
+	ControlMaster auto
+	ControlPath ~/.ssh/socket_directory/%r@%h:%p
+	ControlPersist 1800
+	Hostname 172.16.0.254
+	User root
+	Port 4242
+
+host FIREWALL
+	ControlMaster auto
+	ControlPath ~/.ssh/socket_directory/%r@%h:%p
+	ControlPersist 300
+	Hostname 172.16.0.42
+	User root
+	Port 2929
