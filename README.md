@@ -16,3 +16,9 @@ An example file has been added to the repo, you better make your own one, but co
 
 ![syntax](https://user-images.githubusercontent.com/29956389/62935022-4f1d3800-bdc6-11e9-904b-cd03d92a3dd4.png)
 
+Be sure ton configure the script itself:
+![conf](https://user-images.githubusercontent.com/29956389/62935494-948e3500-bdc7-11e9-93d7-c4ce52012bc7.png)
+
+Be sure to check the permissions and the owner of the script aswell as the config file, as it could disclose important network information.
+
+Now you just have to add your script to the PATH, and you ready to go!
